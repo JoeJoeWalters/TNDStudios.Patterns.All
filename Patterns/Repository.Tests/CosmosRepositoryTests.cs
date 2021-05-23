@@ -1,7 +1,7 @@
 using Xunit;
-using TNDStudios.Patterns.Repository.Module;
+using TNDStudios.Repository;
 
-namespace TNDStudios.Patterns.Repository.Tests
+namespace TNDStudios.Repository.Tests
 {
     public class CosmosRepositoryTests : RepositoryTestsBase
     {

@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Repository.Tests", "Pattern
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Patterns", "Patterns", "{E9772538-66DF-4741-8B29-52775A85C625}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Repository.Cosmos", "Patterns\Repository.Cosmos\Repository.Cosmos.csproj", "{FE4ED796-7E8D-4DEE-9C60-5BEE75F88013}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,6 +25,10 @@ Global
 		{980DAC64-6DDD-4BE7-86AD-2AD638B30FCD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{980DAC64-6DDD-4BE7-86AD-2AD638B30FCD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{980DAC64-6DDD-4BE7-86AD-2AD638B30FCD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FE4ED796-7E8D-4DEE-9C60-5BEE75F88013}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FE4ED796-7E8D-4DEE-9C60-5BEE75F88013}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FE4ED796-7E8D-4DEE-9C60-5BEE75F88013}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FE4ED796-7E8D-4DEE-9C60-5BEE75F88013}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -30,6 +36,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{4E4A4961-F15C-458C-ADCF-E3F84F6BE081} = {E9772538-66DF-4741-8B29-52775A85C625}
 		{980DAC64-6DDD-4BE7-86AD-2AD638B30FCD} = {E9772538-66DF-4741-8B29-52775A85C625}
+		{FE4ED796-7E8D-4DEE-9C60-5BEE75F88013} = {E9772538-66DF-4741-8B29-52775A85C625}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D6A504C7-AC34-49DA-A8F3-FF4E512C92ED}

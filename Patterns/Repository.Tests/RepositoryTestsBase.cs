@@ -3,9 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using TNDStudios.Patterns.Repository.Module;
+using TNDStudios.Repository;
 
-namespace TNDStudios.Patterns.Repository.Tests
+namespace TNDStudios.Repository.Tests
 {
     public class TestDomainObject : RepositoryDomainObject { }
     public class TestDocumentObject : RepositoryDocument { }

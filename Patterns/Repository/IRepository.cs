@@ -4,7 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 
-namespace TNDStudios.Patterns.Repository.Module
+namespace TNDStudios.Repository
 {
     public class RepositoryDocument
     {

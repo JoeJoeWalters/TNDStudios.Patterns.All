@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 
-namespace TNDStudios.Patterns.Repository.Module
+namespace TNDStudios.Repository
 {
     public class CosmosRepository<TDomain, TDocument> : IRepository<TDomain, TDocument>
         where TDocument : RepositoryDocument
