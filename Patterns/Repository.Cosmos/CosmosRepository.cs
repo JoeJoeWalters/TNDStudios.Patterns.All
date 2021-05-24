@@ -5,55 +5,54 @@ using System.Linq.Expressions;
 
 namespace TNDStudios.Repository
 {
-    public class CosmosRepository<TDomain, TDocument> : IRepository<TDomain, TDocument>
+    public class CosmosRepository<TDomain, TDocument> : RepositoryBase<TDomain, TDocument>
         where TDocument : RepositoryDocument
         where TDomain : RepositoryDomainObject
     {
-        private readonly Dictionary<String, TDocument> _values;
-
-        private readonly Func<TDomain, TDocument> _toDocument;
-        private readonly Func<TDocument, TDomain> _toDomain;
+        private readonly string _connectionString = String.Empty;
+        private readonly string _collectionName = String.Empty;
 
         public CosmosRepository(
             Func<TDomain, TDocument> toDocument,
-            Func<TDocument, TDomain> toDomain)
+            Func<TDocument, TDomain> toDomain,
+            string connectionString,
+            string collectionName) : base(toDocument, toDomain)
         {
-            _toDocument = toDocument;
-            _toDomain = toDomain;
-            _values = new Dictionary<String, TDocument>();
+            _connectionString = connectionString;
+            _collectionName = collectionName;
         }
 
-        public bool Delete(String id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public TDomain Get(String id)
+        public override bool Delete(String id)
         {
             throw new NotImplementedException();
         }
 
-        public IEnumerable<TDomain> Query(Expression<Func<TDocument, Boolean>> query)
+        public override TDomain Get(String id)
         {
             throw new NotImplementedException();
         }
 
-        public TDomain ToDomain(TDocument document)
+        public override IEnumerable<TDomain> Query(Expression<Func<TDocument, Boolean>> query)
         {
             throw new NotImplementedException();
         }
 
-        public TDocument ToDocument(TDomain domain)
+        public override TDomain ToDomain(TDocument document)
         {
             throw new NotImplementedException();
         }
 
-        public bool Upsert(TDomain item)
+        public override TDocument ToDocument(TDomain domain)
         {
             throw new NotImplementedException();
         }
 
-        public bool WithData(List<TDomain> data)
+        public override bool Upsert(TDomain item)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override bool WithData(List<TDomain> data)
         {
             throw new NotImplementedException();
         }

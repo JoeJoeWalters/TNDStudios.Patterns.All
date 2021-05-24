@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
-    <AssemblyName>TNDStudios.Patterns.Repository.Module</AssemblyName>
-    <RootNamespace>TNDStudios.Patterns.Repository.Module</RootNamespace>
+    <AssemblyName>TNDStudios.Repository</AssemblyName>
+    <RootNamespace>TNDStudios.Repository</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

@@ -5,28 +5,23 @@ using System.Linq.Expressions;
 
 namespace TNDStudios.Repository
 {
-    public class MemoryRepository<TDomain, TDocument> : IRepository<TDomain, TDocument>
+    public class MemoryRepository<TDomain, TDocument> : RepositoryBase<TDomain, TDocument>
         where TDocument : RepositoryDocument
         where TDomain : RepositoryDomainObject
     {
         private readonly Dictionary<String, TDocument> _values;
 
-        private readonly Func<TDomain, TDocument> _toDocument;
-        private readonly Func<TDocument, TDomain> _toDomain;
-
         public MemoryRepository(
             Func<TDomain, TDocument> toDocument,
-            Func<TDocument, TDomain> toDomain)
+            Func<TDocument, TDomain> toDomain) : base(toDocument, toDomain)
         {
-            _toDocument = toDocument;
-            _toDomain = toDomain;
             _values = new Dictionary<String, TDocument>();
         }
 
-        public bool Delete(String id) 
+        public override bool Delete(String id) 
             => _values.Remove(id);
 
-        public TDomain Get(String id)
+        public override TDomain Get(String id)
         {
             if (_values.ContainsKey(id))
             {
@@ -36,19 +31,19 @@ namespace TNDStudios.Repository
             return null;
         }
 
-        public IEnumerable<TDomain> Query(Expression<Func<TDocument, Boolean>> query)
+        public override IEnumerable<TDomain> Query(Expression<Func<TDocument, Boolean>> query)
         {
             var filtered = _values.Select(x => x.Value).AsQueryable<TDocument>().Where(query);
             return filtered.Select(x => ToDomain(x)).ToList();
         }
 
-        public TDomain ToDomain(TDocument document) 
+        public override TDomain ToDomain(TDocument document) 
             => _toDomain(document);
 
-        public TDocument ToDocument(TDomain domain) 
+        public override TDocument ToDocument(TDomain domain) 
             => _toDocument(domain);
 
-        public bool Upsert(TDomain item)
+        public override bool Upsert(TDomain item)
         {
             TDocument document = ToDocument(item);
             if (document != null)
@@ -61,7 +56,7 @@ namespace TNDStudios.Repository
             return false;
         }
 
-        public bool WithData(List<TDomain> data)
+        public override bool WithData(List<TDomain> data)
         {
             Int32 insertCount = 0;
 
