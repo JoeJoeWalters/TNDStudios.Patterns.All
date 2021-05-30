@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace TNDStudios.Repository
 {
@@ -23,11 +24,11 @@ namespace TNDStudios.Repository
         TDomain ToDomain(TDocument document);
         TDocument ToDocument(TDomain domain);
 
-        TDomain Get(String id);
-        IEnumerable<TDomain> Query(Expression<Func<TDocument, Boolean>> query);
-        Boolean Delete(String id);
-        Boolean Upsert(TDomain item);
+        Task<TDomain> Get(String id);
+        Task<IEnumerable<TDomain>> Query(Expression<Func<TDocument, Boolean>> query);
+        Task<Boolean> Delete(String id);
+        Task<Boolean> Upsert(TDomain item);
 
-        Boolean WithData(List<TDomain> data);
+        Task<Boolean> WithData(List<TDomain> data);
     }
 }

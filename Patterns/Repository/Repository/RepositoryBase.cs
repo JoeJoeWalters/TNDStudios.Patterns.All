@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace TNDStudios.Repository
 {
@@ -19,18 +20,20 @@ namespace TNDStudios.Repository
             _toDomain = toDomain;
         }
 
-        public virtual bool Delete(string id) => throw new NotImplementedException();
+        public virtual async Task<bool> Delete(string id) => throw new NotImplementedException();
 
-        public virtual TDomain Get(string id) => throw new NotImplementedException();
+        public virtual async Task<TDomain> Get(string id) => throw new NotImplementedException();
 
-        public virtual IEnumerable<TDomain> Query(System.Linq.Expressions.Expression<Func<TDocument, bool>> query) => throw new NotImplementedException();
+        public virtual async Task<IEnumerable<TDomain>> Query(System.Linq.Expressions.Expression<Func<TDocument, bool>> query) => throw new NotImplementedException();
 
-        public virtual TDocument ToDocument(TDomain domain) => throw new NotImplementedException();
+        public TDomain ToDomain(TDocument document)
+                    => _toDomain(document);
 
-        public virtual TDomain ToDomain(TDocument document) => throw new NotImplementedException();
+        public TDocument ToDocument(TDomain domain)
+            => _toDocument(domain);
 
-        public virtual bool Upsert(TDomain item) => throw new NotImplementedException();
+        public virtual async Task<bool> Upsert(TDomain item) => throw new NotImplementedException();
 
-        public virtual bool WithData(List<TDomain> data) => throw new NotImplementedException();
+        public virtual async Task<bool> WithData(List<TDomain> data) => throw new NotImplementedException();
     }
 }

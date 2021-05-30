@@ -24,13 +24,13 @@ namespace TNDStudios.Repository.Tests
         internal TestDomainObject ToDomainObject(TestDocumentObject from)
             => new TestDomainObject()
             {
-                Id = from.Id
+                Id = from.Id ?? Guid.NewGuid().ToString()
             };
 
         internal TestDocumentObject ToDocumentObject(TestDomainObject from)
             => new TestDocumentObject()
             {
-                Id = from.Id
+                Id = from.Id ?? Guid.NewGuid().ToString()
             };
 
         public virtual void Add()
@@ -40,7 +40,7 @@ namespace TNDStudios.Repository.Tests
             Boolean result = false;
 
             // ACT
-            result = _repository.Upsert(domain);
+            result = _repository.Upsert(domain).Result;
 
             // ASSERT
             result.Should().BeTrue();
@@ -57,14 +57,14 @@ namespace TNDStudios.Repository.Tests
             Boolean deleteResult = false;
 
             // ACT
-            upsertResult = _repository.Upsert(domain);
+            upsertResult = _repository.Upsert(domain).Result;
             if (upsertResult)
             {
                 upsertId = domain.Id;
-                deleteResult = _repository.Delete(upsertId);
+                deleteResult = _repository.Delete(upsertId).Result;
                 if (deleteResult)
                 {
-                    resultObject = _repository.Get(upsertId);
+                    resultObject = _repository.Get(upsertId).Result;
                 }
             }
 
@@ -81,10 +81,10 @@ namespace TNDStudios.Repository.Tests
             TestDomainObject resultObject = null;
 
             // ACT
-            Boolean upsertResult = _repository.Upsert(domain);
+            Boolean upsertResult = _repository.Upsert(domain).Result;
             if (upsertResult)
             {
-                resultObject = _repository.Get(domain.Id);
+                resultObject = _repository.Get(domain.Id).Result;
             }
 
             // ASSERT
@@ -105,11 +105,11 @@ namespace TNDStudios.Repository.Tests
             IEnumerable<TestDomainObject> results = null;
 
             // ACT
-            Boolean upsertResult = _repository.Upsert(domain);
+            Boolean upsertResult = _repository.Upsert(domain).Result;
             if (upsertResult)
             {
                 query = QueryById(domain.Id);
-                results = _repository.Query(query);
+                results = _repository.Query(query).Result;
             }
 
             // ASSERT
@@ -129,9 +129,9 @@ namespace TNDStudios.Repository.Tests
             IEnumerable<TestDomainObject> results = null;
 
             // ACT
-            success = _repository.WithData(_testData);
+            success = _repository.WithData(_testData).Result;
             query = QueryAll();
-            results = _repository.Query(query);
+            results = _repository.Query(query).Result;
 
             // ASSERT
             success.Should().BeTrue();

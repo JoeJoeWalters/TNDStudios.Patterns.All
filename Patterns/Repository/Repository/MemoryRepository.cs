@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 
 namespace TNDStudios.Repository
 {
@@ -18,10 +19,10 @@ namespace TNDStudios.Repository
             _values = new Dictionary<String, TDocument>();
         }
 
-        public override bool Delete(String id) 
+        public override async Task<bool> Delete(String id) 
             => _values.Remove(id);
 
-        public override TDomain Get(String id)
+        public override async Task<TDomain> Get(String id)
         {
             if (_values.ContainsKey(id))
             {
@@ -31,19 +32,13 @@ namespace TNDStudios.Repository
             return null;
         }
 
-        public override IEnumerable<TDomain> Query(Expression<Func<TDocument, Boolean>> query)
+        public override async Task<IEnumerable<TDomain>> Query(Expression<Func<TDocument, Boolean>> query)
         {
             var filtered = _values.Select(x => x.Value).AsQueryable<TDocument>().Where(query);
             return filtered.Select(x => ToDomain(x)).ToList();
         }
 
-        public override TDomain ToDomain(TDocument document) 
-            => _toDomain(document);
-
-        public override TDocument ToDocument(TDomain domain) 
-            => _toDocument(domain);
-
-        public override bool Upsert(TDomain item)
+        public override async Task<bool> Upsert(TDomain item)
         {
             TDocument document = ToDocument(item);
             if (document != null)
@@ -56,12 +51,15 @@ namespace TNDStudios.Repository
             return false;
         }
 
-        public override bool WithData(List<TDomain> data)
+        public override async Task<bool> WithData(List<TDomain> data)
         {
             Int32 insertCount = 0;
 
             data.ForEach(item =>
-                insertCount += (Upsert(item) ? 1 : 0));
+            {
+                var value = Upsert(item).Result;
+                insertCount += (value ? 1 : 0);
+            });
 
             return insertCount == data.Count;
         }
