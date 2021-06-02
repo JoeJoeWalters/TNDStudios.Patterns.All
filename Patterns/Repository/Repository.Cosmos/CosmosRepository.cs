@@ -14,6 +14,8 @@ namespace TNDStudios.Repository
         private readonly string _connectionString = String.Empty;
         private readonly string _collectionName = String.Empty;
 
+        private readonly PartitionKey _partitionKey;
+
         private readonly CosmosClient _client;
         private readonly Container _container;
 
@@ -22,20 +24,25 @@ namespace TNDStudios.Repository
             Func<TDocument, TDomain> toDomain,
             string connectionString,
             string databaseName,
-            string collectionName) : base(toDocument, toDomain)
+            string collectionName,
+            string partitionKey) : base(toDocument, toDomain)
         {
+            _partitionKey = new PartitionKey(partitionKey);
+
             _connectionString = connectionString;
             _collectionName = collectionName;
 
-            CosmosClientOptions clientOptions = 
-                new CosmosClientOptions() 
-                { 
-                    ConnectionMode = ConnectionMode.Direct,
-                    AllowBulkExecution = true
+            CosmosClientOptions clientOptions =
+                new CosmosClientOptions()
+                {
+                    ConnectionMode = ConnectionMode.Gateway,
+                    AllowBulkExecution = false
                 };
 
             _client = new CosmosClient(_connectionString, clientOptions);
-            _container = _client.GetContainer(databaseName, _collectionName);
+            DatabaseResponse databaseResponse = _client.CreateDatabaseIfNotExistsAsync(databaseName).Result;
+            ContainerResponse containerResponse = databaseResponse.Database.CreateContainerIfNotExistsAsync(new ContainerProperties(_collectionName, partitionKey)).Result;
+            _container = containerResponse.Container;
         }
 
         public override async Task<bool> Delete(String id)
@@ -56,7 +63,8 @@ namespace TNDStudios.Repository
 
         public override async Task<bool> Upsert(TDomain item)
         {
-            await _container.UpsertItemAsync<TDocument>(ToDocument(item), new PartitionKey(item.Id));
+            TDocument document = ToDocument(item);
+            await _container.UpsertItemAsync<TDocument>(document, new PartitionKey(document.PartitionKey));
             return true;
         }
 

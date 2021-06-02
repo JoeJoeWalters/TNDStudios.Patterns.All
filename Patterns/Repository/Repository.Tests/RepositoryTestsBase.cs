@@ -24,15 +24,18 @@ namespace TNDStudios.Repository.Tests
         internal TestDomainObject ToDomainObject(TestDocumentObject from)
             => new TestDomainObject()
             {
-                Id = from.Id ?? Guid.NewGuid().ToString()
+                Id = from.Id
             };
 
         internal TestDocumentObject ToDocumentObject(TestDomainObject from)
-            => new TestDocumentObject()
+        {
+            string id = from.Id = from.Id ?? Guid.NewGuid().ToString();
+            return new TestDocumentObject()
             {
-                Id = from.Id ?? Guid.NewGuid().ToString()
+                Id = id,
+                PartitionKey = id
             };
-
+        }
         public virtual void Add()
         {
             // ARRANGE

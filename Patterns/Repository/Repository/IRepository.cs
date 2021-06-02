@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -7,14 +8,19 @@ using System.Threading.Tasks;
 
 namespace TNDStudios.Repository
 {
+    [JsonObject]
     public class RepositoryDocument
     {
-        public virtual String Id { get; set; }
+        [JsonProperty("id")]
+        public String Id { get; set; }
+
+        [JsonProperty("partitionKey")]
+        public String PartitionKey { get; set; }
     }
 
     public class RepositoryDomainObject
     {
-        public virtual String Id { get; set; }
+        public String Id { get; set; }
     }
 
     public interface IRepository<TDomain, TDocument> 
