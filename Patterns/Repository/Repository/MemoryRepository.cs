@@ -19,10 +19,10 @@ namespace TNDStudios.Repository
             _values = new Dictionary<String, TDocument>();
         }
 
-        public override async Task<bool> Delete(String id) 
+        public override async Task<bool> Delete(String id, String partitionKey) 
             => _values.Remove(id);
 
-        public override async Task<TDomain> Get(String id)
+        public override async Task<TDomain> Get(String id, String partitionKey)
         {
             if (_values.ContainsKey(id))
             {
@@ -32,7 +32,7 @@ namespace TNDStudios.Repository
             return null;
         }
 
-        public override async Task<IEnumerable<TDomain>> Query(Expression<Func<TDocument, Boolean>> query)
+        public override async Task<IEnumerable<TDomain>> Query(Expression<Func<TDocument, Boolean>> query, string partitionKey)
         {
             var filtered = _values.Select(x => x.Value).AsQueryable<TDocument>().Where(query);
             return filtered.Select(x => ToDomain(x)).ToList();

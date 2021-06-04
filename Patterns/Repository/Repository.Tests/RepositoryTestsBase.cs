@@ -12,6 +12,8 @@ namespace TNDStudios.Repository.Tests
 
     public class RepositoryTestsBase
     {
+        internal String _partitionFixedKey = "PartitionKeyFixedValue";
+
         internal List<TestDomainObject> _testData = new List<TestDomainObject>() { };
 
         internal IRepository<TestDomainObject, TestDocumentObject> _repository;
@@ -28,7 +30,7 @@ namespace TNDStudios.Repository.Tests
             return new TestDocumentObject()
             {
                 Id = id,
-                PartitionKey = id
+                PartitionKey = _partitionFixedKey
             };
         }
 
@@ -71,10 +73,10 @@ namespace TNDStudios.Repository.Tests
             if (upsertResult)
             {
                 upsertId = domain.Id;
-                deleteResult = _repository.Delete(upsertId).Result;
+                deleteResult = _repository.Delete(upsertId, _partitionFixedKey).Result;
                 if (deleteResult)
                 {
-                    resultObject = _repository.Get(upsertId).Result;
+                    resultObject = _repository.Get(upsertId, _partitionFixedKey).Result;
                 }
             }
 
@@ -94,7 +96,7 @@ namespace TNDStudios.Repository.Tests
             Boolean upsertResult = _repository.Upsert(domain).Result;
             if (upsertResult)
             {
-                resultObject = _repository.Get(domain.Id).Result;
+                resultObject = _repository.Get(domain.Id, _partitionFixedKey).Result;
             }
 
             // ASSERT
@@ -105,7 +107,7 @@ namespace TNDStudios.Repository.Tests
         }
 
         Expression<Func<TestDocumentObject, Boolean>> QueryById(String id)
-            => q => q.Id == id;
+            => q => q.Id == id && q.PartitionKey == _partitionFixedKey;
 
         public virtual void Query()
         {
@@ -119,7 +121,7 @@ namespace TNDStudios.Repository.Tests
             if (upsertResult)
             {
                 query = QueryById(domain.Id);
-                results = _repository.Query(query).Result;
+                results = _repository.Query(query, _partitionFixedKey).Result;
             }
 
             // ASSERT
@@ -128,8 +130,8 @@ namespace TNDStudios.Repository.Tests
             results.ToList()[0].Id.Should().Be(domain.Id);
         }
 
-        Expression<Func<TestDocumentObject, Boolean>> QueryAll()
-            => q => true;
+        Expression<Func<TestDocumentObject, Boolean>> QueryAll(List<string> ids)
+            => q => (q.PartitionKey == _partitionFixedKey && ids.Contains(q.Id) );
 
         public virtual void DataLoad()
         {
@@ -140,8 +142,8 @@ namespace TNDStudios.Repository.Tests
 
             // ACT
             success = _repository.WithData(_testData).Result;
-            query = QueryAll();
-            results = _repository.Query(query).Result;
+            query = QueryAll(_testData.Select(x => x.Id).ToList());
+            results = _repository.Query(query, _partitionFixedKey).Result;
 
             // ASSERT
             success.Should().BeTrue();

@@ -20,11 +20,11 @@ namespace TNDStudios.Repository
             _toDomain = toDomain;
         }
 
-        public virtual async Task<bool> Delete(string id) => throw new NotImplementedException();
+        public virtual async Task<bool> Delete(string id, String partitionKey) => throw new NotImplementedException();
 
-        public virtual async Task<TDomain> Get(string id) => throw new NotImplementedException();
+        public virtual async Task<TDomain> Get(string id, String partitionKey) => throw new NotImplementedException();
 
-        public virtual async Task<IEnumerable<TDomain>> Query(System.Linq.Expressions.Expression<Func<TDocument, bool>> query) => throw new NotImplementedException();
+        public virtual async Task<IEnumerable<TDomain>> Query(System.Linq.Expressions.Expression<Func<TDocument, bool>> query, string partitionKey) => throw new NotImplementedException();
 
         public TDomain ToDomain(TDocument document)
                     => _toDomain(document);

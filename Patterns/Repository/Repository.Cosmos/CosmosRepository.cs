@@ -46,20 +46,20 @@ namespace TNDStudios.Repository
             _container = containerResponse.Container;
         }
 
-        public override async Task<bool> Delete(String id)
+        public override async Task<bool> Delete(String id, String partitionKey)
         {
-            await _container.DeleteItemAsync<TDocument>(id, new PartitionKey(id));
+            await _container.DeleteItemAsync<TDocument>(id, new PartitionKey(partitionKey));
             return true;
         }
 
-        public override async Task<TDomain> Get(String id)
+        public override async Task<TDomain> Get(String id, String partitionKey)
         {
             TDocument document = null;
             TDomain domain = null;
 
             try
             {
-                document = await _container.ReadItemAsync<TDocument>(id, new PartitionKey(id));
+                document = await _container.ReadItemAsync<TDocument>(id, new PartitionKey(partitionKey));
             }
             catch(CosmosException cosEx) when (cosEx.StatusCode == HttpStatusCode.NotFound)
             {
@@ -78,11 +78,12 @@ namespace TNDStudios.Repository
             return domain;
         }
 
-        public override async Task<IEnumerable<TDomain>> Query(Expression<Func<TDocument, Boolean>> query)
+        public override async Task<IEnumerable<TDomain>> Query(Expression<Func<TDocument, Boolean>> query, string partitionKey)
         {
+            QueryRequestOptions requestOptions = new QueryRequestOptions() { PartitionKey = new PartitionKey(partitionKey) };
             List<TDocument> documents = _container
-                    .GetItemLinqQueryable<TDocument>(allowSynchronousQueryExecution: true)
-                    .Where(query).ToList();
+                    .GetItemLinqQueryable<TDocument>(allowSynchronousQueryExecution: true, requestOptions: requestOptions)
+                    .Where(query).Select(x => x).ToList();
 
             return documents.Select(document => ToDomain(document)).ToList<TDomain>();
         }
