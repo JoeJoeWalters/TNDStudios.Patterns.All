@@ -10,7 +10,7 @@ namespace TNDStudios.Repository.Tests
         private const string _collectionName = "testCollection";
         private const string _partitionKey = "/partitionKey";
 
-        public CosmosRepositoryTests()
+        public CosmosRepositoryTests() : base()
         {
             _repository = new CosmosRepository<TestDomainObject, TestDocumentObject>
                 (ToDocumentObject, ToDomainObject, 

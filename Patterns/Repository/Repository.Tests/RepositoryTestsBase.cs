@@ -12,12 +12,7 @@ namespace TNDStudios.Repository.Tests
 
     public class RepositoryTestsBase
     {
-        internal List<TestDomainObject> _testData = new List<TestDomainObject>()
-            { 
-                new TestDomainObject(){ Id = Guid.NewGuid().ToString() },
-                new TestDomainObject(){ Id = Guid.NewGuid().ToString() },
-                new TestDomainObject(){ Id = Guid.NewGuid().ToString() }
-            };
+        internal List<TestDomainObject> _testData = new List<TestDomainObject>() { };
 
         internal IRepository<TestDomainObject, TestDocumentObject> _repository;
 
@@ -36,6 +31,18 @@ namespace TNDStudios.Repository.Tests
                 PartitionKey = id
             };
         }
+
+        public RepositoryTestsBase()
+        {
+            for (int i = 0; i < 3; i++)
+            {
+                String id = Guid.NewGuid().ToString();
+                _testData.Add(
+                    new TestDomainObject() { Id = id }
+                    );
+            };
+        }
+
         public virtual void Add()
         {
             // ARRANGE

@@ -80,7 +80,11 @@ namespace TNDStudios.Repository
 
         public override async Task<IEnumerable<TDomain>> Query(Expression<Func<TDocument, Boolean>> query)
         {
-            throw new NotImplementedException();
+            List<TDocument> documents = _container
+                    .GetItemLinqQueryable<TDocument>(allowSynchronousQueryExecution: true)
+                    .Where(query).ToList();
+
+            return documents.Select(document => ToDomain(document)).ToList<TDomain>();
         }
 
         public override async Task<bool> Upsert(TDomain item)
@@ -92,7 +96,15 @@ namespace TNDStudios.Repository
 
         public override async Task<bool> WithData(List<TDomain> data)
         {
-            throw new NotImplementedException();
+            bool result = true;
+
+            foreach(TDomain domain in data)
+            {
+                bool upsertResult = await Upsert(domain);
+                result = !upsertResult ? false : result;
+            }
+
+            return result;
         }
     }
 }

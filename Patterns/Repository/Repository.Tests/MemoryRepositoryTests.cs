@@ -5,7 +5,7 @@ namespace TNDStudios.Repository.Tests
 {
     public class MemoryRepositoryTests : RepositoryTestsBase
     {
-        public MemoryRepositoryTests()
+        public MemoryRepositoryTests() : base()
         {
             _repository = new MemoryRepository<TestDomainObject, TestDocumentObject>(ToDocumentObject, ToDomainObject);
         }
