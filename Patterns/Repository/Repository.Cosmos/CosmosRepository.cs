@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Net;
 using System.Threading.Tasks;
 using Microsoft.Azure.Cosmos;
 
@@ -53,7 +54,28 @@ namespace TNDStudios.Repository
 
         public override async Task<TDomain> Get(String id)
         {
-            throw new NotImplementedException();
+            TDocument document = null;
+            TDomain domain = null;
+
+            try
+            {
+                document = await _container.ReadItemAsync<TDocument>(id, new PartitionKey(id));
+            }
+            catch(CosmosException cosEx) when (cosEx.StatusCode == HttpStatusCode.NotFound)
+            {
+
+            }
+            catch (Exception ex)
+            {
+
+            }
+            finally
+            {
+                if (document != null)
+                    domain = ToDomain(document);
+            }
+
+            return domain;
         }
 
         public override async Task<IEnumerable<TDomain>> Query(Expression<Func<TDocument, Boolean>> query)
