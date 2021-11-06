@@ -4,7 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
-namespace TNDStudios.Repository
+namespace Repository.Common
 {
     public class MemoryRepository<TDomain, TDocument> : RepositoryBase<TDomain, TDocument>
         where TDocument : RepositoryDocument

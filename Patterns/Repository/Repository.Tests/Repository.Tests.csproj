@@ -5,9 +5,9 @@
 
     <IsPackable>false</IsPackable>
 
-    <AssemblyName>TNDStudios.Patterns.Repository.Tests</AssemblyName>
+    <AssemblyName>Repository.Tests</AssemblyName>
 
-    <RootNamespace>TNDStudios.Patterns.Repository.Tests</RootNamespace>
+    <RootNamespace>Repository.Tests</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
@@ -26,7 +26,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Repository.Cosmos\Repository.Cosmos.csproj" />
-    <ProjectReference Include="..\Repository\Repository.csproj" />
+    <ProjectReference Include="..\Repository\Repository.Common.csproj" />
   </ItemGroup>
 
 </Project>

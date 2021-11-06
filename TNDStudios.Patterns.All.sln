@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29613.14
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Repository", "Patterns\Repository\Repository\Repository.csproj", "{4E4A4961-F15C-458C-ADCF-E3F84F6BE081}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Repository.Common", "Patterns\Repository\Repository\Repository.Common.csproj", "{4E4A4961-F15C-458C-ADCF-E3F84F6BE081}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Repository.Tests", "Patterns\Repository\Repository.Tests\Repository.Tests.csproj", "{980DAC64-6DDD-4BE7-86AD-2AD638B30FCD}"
 EndProject

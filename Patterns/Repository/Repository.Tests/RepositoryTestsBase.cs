@@ -1,11 +1,11 @@
 ﻿using FluentAssertions;
+using Repository.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using TNDStudios.Repository;
 
-namespace TNDStudios.Repository.Tests
+namespace Repository.Tests
 {
     public class TestDomainObject : RepositoryDomainObject { }
     public class TestDocumentObject : RepositoryDocument { }

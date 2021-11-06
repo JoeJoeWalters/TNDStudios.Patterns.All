@@ -1,9 +1,9 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
-    <AssemblyName>TNDStudios.Repository</AssemblyName>
-    <RootNamespace>TNDStudios.Repository</RootNamespace>
+    <AssemblyName>TNDStudios.Repository.Common</AssemblyName>
+    <RootNamespace>TNDStudios.Repository.Common</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

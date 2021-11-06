@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace TNDStudios.Repository
+namespace Repository.Common
 {
     public class RepositoryBase<TDomain, TDocument> : IRepository<TDomain, TDocument>
         where TDocument : RepositoryDocument
