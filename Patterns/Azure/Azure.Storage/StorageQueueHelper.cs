@@ -26,6 +26,21 @@ namespace Azure.Storage
             }
         }
 
+        public Int32 Length 
+        {
+            get { 
+                try
+                {
+                    QueueProperties properties = _QueueClient.GetProperties();
+                    return properties.ApproximateMessagesCount;
+                }
+                catch 
+                {
+                    return 0;
+                }
+            } 
+        }
+
         public StorageQueueHelper(ILogger logger, String connectionString, String queueName)
         {
             _Logger = logger;
@@ -33,16 +48,22 @@ namespace Azure.Storage
             _QueueClient.CreateIfNotExists();
         }
 
-        public Boolean AddMessage<T>(T message)
-            => AddMessage(JsonConvert.SerializeObject(message));
+        public Boolean AddMessage<T>(T message, QueueMessageOptions options = null)
+            => AddMessage(JsonConvert.SerializeObject(message), null);
 
-        public Boolean AddMessage(String message)
+        public Boolean AddMessage(String message, QueueMessageOptions options = null)
         {
             if (IsAvailable)
             {
+                options = options ?? new QueueMessageOptions()
+                                            {
+                                                TTL = null,
+                                                Delay = null
+                                            };
+
                 try
                 {
-                    _QueueClient.SendMessage(message);
+                    _QueueClient.SendMessage(message, options.Delay, options.TTL);
                     _Logger.LogInformation($"Added message to queue - {_QueueClient.Name}");
                     return true;
                 }
