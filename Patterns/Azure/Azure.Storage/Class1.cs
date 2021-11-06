@@ -1,4 +1,5 @@
 ﻿using System;
+using Azure.Storage.Queues;
 
 namespace Azure.Storage
 {
