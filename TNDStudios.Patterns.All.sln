@@ -27,7 +27,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Azure.Storage", "Patterns\A
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Azure.Storage.Tests", "Patterns\Azure\Azure.Storage.Tests\Azure.Storage.Tests.csproj", "{5E165C07-C3BB-4029-BFC8-8AB0465AF347}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Azure.Common", "Patterns\Azure\Azure.Common\Azure.Common.csproj", "{29535F64-7873-40CB-ABAF-107AF9937586}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Azure.Common", "Patterns\Azure\Azure.Common\Azure.Common.csproj", "{29535F64-7873-40CB-ABAF-107AF9937586}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestHelpers", "Patterns\Helpers\TestHelpers\TestHelpers.csproj", "{27B5DDBA-B7BC-4117-ACD6-2EA2AB86E962}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -67,6 +69,10 @@ Global
 		{29535F64-7873-40CB-ABAF-107AF9937586}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{29535F64-7873-40CB-ABAF-107AF9937586}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{29535F64-7873-40CB-ABAF-107AF9937586}.Release|Any CPU.Build.0 = Release|Any CPU
+		{27B5DDBA-B7BC-4117-ACD6-2EA2AB86E962}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{27B5DDBA-B7BC-4117-ACD6-2EA2AB86E962}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{27B5DDBA-B7BC-4117-ACD6-2EA2AB86E962}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{27B5DDBA-B7BC-4117-ACD6-2EA2AB86E962}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -84,6 +90,7 @@ Global
 		{159D28E8-CC00-4963-BB2F-82F39840071E} = {4424C534-5F44-470C-91C2-6DDA030541C1}
 		{5E165C07-C3BB-4029-BFC8-8AB0465AF347} = {4424C534-5F44-470C-91C2-6DDA030541C1}
 		{29535F64-7873-40CB-ABAF-107AF9937586} = {4424C534-5F44-470C-91C2-6DDA030541C1}
+		{27B5DDBA-B7BC-4117-ACD6-2EA2AB86E962} = {84BB75AB-A8A3-4BEE-87C8-BD72F4B5788D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D6A504C7-AC34-49DA-A8F3-FF4E512C92ED}

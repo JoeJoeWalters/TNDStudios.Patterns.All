@@ -25,6 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Helpers\TestHelpers\TestHelpers.csproj" />
     <ProjectReference Include="..\Repository.Cosmos\Repository.Cosmos.csproj" />
     <ProjectReference Include="..\Repository\Repository.Common.csproj" />
   </ItemGroup>
