@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using Azure.Common.Helpers;
 using Azure.Storage.Queues; 
 using Azure.Storage.Queues.Models;
@@ -7,6 +8,12 @@ using Newtonsoft.Json;
 
 namespace Azure.Storage
 {
+    public static class QueueMessageExtensions
+    {
+        public static String BodyAsString(this QueueMessage value)
+            => Encoding.UTF8.GetString(value.Body.ToArray());
+    }
+
     public class StorageQueueHelper : IQueueHelper<QueueMessage>
     {
         private readonly QueueClient _QueueClient;
