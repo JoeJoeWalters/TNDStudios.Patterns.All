@@ -46,14 +46,20 @@ namespace Azure.Storage.Tests
             // ARRANGE
             ILogger nullLogger = new Mock<ILogger>().Object;
             String connectionString = fixture.Configuration.StorageConnectionString;
-            String queueName = "testqueue";
+            String queueName = "addmsgtest";
             IQueueHelper<QueueMessage> queueHelper = new StorageQueueHelper(nullLogger, connectionString, queueName);
 
+            Func<QueueMessage, Boolean> processor = (QueueMessage message) => { return true; };
+
             // ACT
-            Boolean result = queueHelper.AddMessage("");
+            queueHelper.Destroy(); // Kill an existing queue if there is one
+            queueHelper.Create(); // Create a fresh queue
+            Boolean addResult = queueHelper.AddMessage("Test Message");
+            Boolean fetchResult = queueHelper.ProcessMessages(processor);
 
             // ASSERT
-            result.Should().BeTrue();
+            addResult.Should().BeTrue();
+            fetchResult.Should().BeTrue();
         }
     }
 }

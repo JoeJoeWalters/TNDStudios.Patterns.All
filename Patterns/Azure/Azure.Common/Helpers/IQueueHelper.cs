@@ -7,6 +7,9 @@ namespace Azure.Common.Helpers
         Boolean IsAvailable { get; }
         Int32 Length { get; }
 
+        Boolean Create();
+        Boolean Destroy();
+
         Boolean AddMessage<T>(T message, QueueMessageOptions options = null);
         Boolean AddMessage(String message, QueueMessageOptions options = null);       
         Boolean ProcessMessages(Func<MessageClass, Boolean> processor);

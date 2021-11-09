@@ -45,7 +45,34 @@ namespace Azure.Storage
         {
             _Logger = logger;
             _QueueClient = new QueueClient(connectionString, queueName);
-            _QueueClient.CreateIfNotExists();
+        }
+
+        public Boolean Create()
+        {
+            try
+            {
+                _QueueClient.CreateIfNotExists();
+            }
+            catch 
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        public Boolean Destroy()
+        {
+            try
+            {
+                _QueueClient.DeleteIfExists();
+            }
+            catch
+            {
+                return false;
+            }
+
+            return true;
         }
 
         public Boolean AddMessage<T>(T message, QueueMessageOptions options = null)
