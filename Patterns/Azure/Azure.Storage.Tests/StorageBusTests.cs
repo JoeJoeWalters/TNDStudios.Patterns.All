@@ -48,15 +48,52 @@ namespace Azure.Storage.Tests
             String messageContext = "This is a test";
             String connectionString = fixture.Configuration.StorageConnectionString;
             String queueName = "addmsgtest";
-            IQueueHelper<QueueMessage> queueHelper = new StorageQueueHelper(nullLogger, connectionString, queueName);
-
-            Func<String, Boolean> processor = (String content) => { return content == messageContext; };
+            IQueueHelper<QueueMessage> queueHelper = new StorageQueueHelper(nullLogger, connectionString, queueName, new QueueMessageOptions { });
+            Func<String, Int64,  Boolean> processor = (String content, Int64 deliveryCount) => 
+                                                        { 
+                                                            return content == messageContext; 
+                                                        };
 
             // ACT
             queueHelper.Destroy(); // Kill an existing queue if there is one
             queueHelper.Create(); // Create a fresh queue
             Boolean addResult = queueHelper.AddMessage(messageContext);
             Boolean fetchResult = queueHelper.ProcessMessages(processor).Result;
+            Int32 endLength = queueHelper.Length;
+
+            // ASSERT
+            addResult.Should().BeTrue();
+            fetchResult.Should().BeTrue();
+            endLength.Should().Be(0);
+        }
+
+        [Fact]
+        public void Failing_Message_On_Bus_Should_Result_In_Defined_Delay()
+        {
+            // ARRANGE
+            Int32 secondsRequeueDelay = 5;
+            ILogger nullLogger = new Mock<ILogger>().Object;
+            String messageContext = "This is a test";
+            String connectionString = fixture.Configuration.StorageConnectionString;
+            String queueName = "addmsgtest";
+            IQueueHelper<QueueMessage> queueHelper = new StorageQueueHelper(nullLogger, connectionString, queueName, new QueueMessageOptions { });
+            Func<String, Int64, Boolean> processor = (String content, Int64 deliveryCount) =>
+            {
+                return (deliveryCount > 1) && (content == messageContext);
+            };
+
+            // ACT
+            queueHelper.Destroy(); // Kill an existing queue if there is one
+            queueHelper.Create(); // Create a fresh queue
+            Boolean addResult = queueHelper.AddMessage(messageContext);
+            Boolean fetchResult = false;
+            DateTime start = DateTime.UtcNow;
+            while (!fetchResult)
+            {
+                fetchResult = queueHelper.ProcessMessages(processor).Result;
+            }
+            DateTime finished = DateTime.UtcNow;
+
             Int32 endLength = queueHelper.Length;
 
             // ASSERT

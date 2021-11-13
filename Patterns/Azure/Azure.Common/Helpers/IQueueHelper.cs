@@ -11,8 +11,8 @@ namespace Azure.Common.Helpers
         Boolean Create();
         Boolean Destroy();
 
-        Boolean AddMessage<T>(T message, QueueMessageOptions options = null);
-        Boolean AddMessage(String message, QueueMessageOptions options = null);
-        Task<Boolean> ProcessMessages(Func<String, Boolean> processor);
+        Boolean AddMessage<T>(T message);
+        Boolean AddMessage(String message);
+        Task<Boolean> ProcessMessages(Func<String, Int64, Boolean> processor);
     }
 }

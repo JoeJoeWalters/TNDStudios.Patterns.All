@@ -20,6 +20,7 @@ namespace Azure.Storage
     {
         private readonly QueueClient _QueueClient;
         private readonly ILogger _Logger;
+        private readonly QueueMessageOptions _Options;
 
         public Boolean IsAvailable
         { 
@@ -50,10 +51,16 @@ namespace Azure.Storage
             } 
         }
 
-        public StorageQueueHelper(ILogger logger, String connectionString, String queueName)
+        public StorageQueueHelper(ILogger logger, String connectionString, String queueName, QueueMessageOptions options)
         {
             _Logger = logger;
             _QueueClient = new QueueClient(connectionString, queueName);
+            _Options = options ?? new QueueMessageOptions()
+                {
+                    TTL = null,
+                    Delay = null
+                };
+
         }
 
         public Boolean Create()
@@ -84,22 +91,16 @@ namespace Azure.Storage
             return true;
         }
 
-        public Boolean AddMessage<T>(T message, QueueMessageOptions options = null)
-            => AddMessage(JsonConvert.SerializeObject(message), null);
+        public Boolean AddMessage<T>(T message)
+            => AddMessage(JsonConvert.SerializeObject(message));
 
-        public Boolean AddMessage(String message, QueueMessageOptions options = null)
+        public Boolean AddMessage(String message)
         {
             if (IsAvailable)
             {
-                options = options ?? new QueueMessageOptions()
-                                            {
-                                                TTL = null,
-                                                Delay = null
-                                            };
-
                 try
                 {
-                    _QueueClient.SendMessage(message, options.Delay, options.TTL);
+                    _QueueClient.SendMessage(message, _Options.Delay, _Options.TTL);
                     _Logger.LogInformation($"Added message to queue - {_QueueClient.Name}");
                     return true;
                 }
@@ -112,7 +113,7 @@ namespace Azure.Storage
             return false;
         }
 
-        public async Task<Boolean> ProcessMessages(Func<String, Boolean> processor)
+        public async Task<Boolean> ProcessMessages(Func<String, Int64, Boolean> processor)
         {
             Boolean result = true;
             if (IsAvailable)
@@ -123,7 +124,7 @@ namespace Azure.Storage
                     foreach (QueueMessage message in messages)
                     {
                         String content = message.BodyAsString();
-                        if (processor(content))
+                        if (processor(content, message.DequeueCount))
                         {
                             // Delete the processed message to avoid the lease expiring and it being visible again to another process
                             await _QueueClient.DeleteMessageAsync(message.MessageId, message.PopReceipt);
