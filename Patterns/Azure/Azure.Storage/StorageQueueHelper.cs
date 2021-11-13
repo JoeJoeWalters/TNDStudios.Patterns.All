@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Text;
+using System.Threading.Tasks;
 using Azure.Common.Helpers;
 using Azure.Storage.Queues; 
 using Azure.Storage.Queues.Models;
 using Microsoft.Extensions.Logging;
+using Microsoft.WindowsAzure.Storage.Queue;
 using Newtonsoft.Json;
 
 namespace Azure.Storage
@@ -110,18 +112,26 @@ namespace Azure.Storage
             return false;
         }
 
-        public Boolean ProcessMessages(Func<QueueMessage, Boolean> processor)
+        public async Task<Boolean> ProcessMessages(Func<String, Boolean> processor)
         {
             Boolean result = true;
             if (IsAvailable)
             {
                 try
                 {
-                    QueueMessage[] messages = _QueueClient.ReceiveMessages();
+                    QueueMessage[] messages = await _QueueClient.ReceiveMessagesAsync();
                     foreach (QueueMessage message in messages)
                     {
-                        if (!processor(message))
-                            result = false;
+                        String content = message.BodyAsString();
+                        if (processor(content))
+                        {
+                            // Delete the processed message to avoid the lease expiring and it being visible again to another process
+                            await _QueueClient.DeleteMessageAsync(message.MessageId, message.PopReceipt);
+                        }
+                        else
+                        {
+                            result = false; // failed so overall failed too
+                        }
                     }
                 }
                 catch (Exception ex)

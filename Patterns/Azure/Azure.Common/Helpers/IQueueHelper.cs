@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace Azure.Common.Helpers
 {
@@ -11,7 +12,7 @@ namespace Azure.Common.Helpers
         Boolean Destroy();
 
         Boolean AddMessage<T>(T message, QueueMessageOptions options = null);
-        Boolean AddMessage(String message, QueueMessageOptions options = null);       
-        Boolean ProcessMessages(Func<MessageClass, Boolean> processor);
+        Boolean AddMessage(String message, QueueMessageOptions options = null);
+        Task<Boolean> ProcessMessages(Func<String, Boolean> processor);
     }
 }

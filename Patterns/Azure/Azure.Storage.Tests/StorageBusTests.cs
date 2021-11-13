@@ -50,17 +50,19 @@ namespace Azure.Storage.Tests
             String queueName = "addmsgtest";
             IQueueHelper<QueueMessage> queueHelper = new StorageQueueHelper(nullLogger, connectionString, queueName);
 
-            Func<QueueMessage, Boolean> processor = (QueueMessage message) => { return message.BodyAsString() == messageContext; };
+            Func<String, Boolean> processor = (String content) => { return content == messageContext; };
 
             // ACT
             queueHelper.Destroy(); // Kill an existing queue if there is one
             queueHelper.Create(); // Create a fresh queue
             Boolean addResult = queueHelper.AddMessage(messageContext);
-            Boolean fetchResult = queueHelper.ProcessMessages(processor);
+            Boolean fetchResult = queueHelper.ProcessMessages(processor).Result;
+            Int32 endLength = queueHelper.Length;
 
             // ASSERT
             addResult.Should().BeTrue();
             fetchResult.Should().BeTrue();
+            endLength.Should().Be(0);
         }
     }
 }
