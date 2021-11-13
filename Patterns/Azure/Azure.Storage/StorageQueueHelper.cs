@@ -113,9 +113,9 @@ namespace Azure.Storage
             return false;
         }
 
-        public async Task<Boolean> ProcessMessages(Func<String, Int64, Boolean> processor)
+        public async Task<QueueProcessResult> ProcessMessages(Func<String, Int64, Boolean> processor)
         {
-            Boolean result = true;
+            QueueProcessResult result = new QueueProcessResult();
             if (IsAvailable)
             {
                 try
@@ -128,10 +128,11 @@ namespace Azure.Storage
                         {
                             // Delete the processed message to avoid the lease expiring and it being visible again to another process
                             await _QueueClient.DeleteMessageAsync(message.MessageId, message.PopReceipt);
+                            result.Success++;
                         }
                         else
                         {
-                            result = false; // failed so overall failed too
+                            result.Fail++;
                         }
                     }
                 }

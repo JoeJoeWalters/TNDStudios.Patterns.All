@@ -13,6 +13,6 @@ namespace Azure.Common.Helpers
 
         Boolean AddMessage<T>(T message);
         Boolean AddMessage(String message);
-        Task<Boolean> ProcessMessages(Func<String, Int64, Boolean> processor);
+        Task<QueueProcessResult> ProcessMessages(Func<String, Int64, Boolean> processor);
     }
 }

@@ -58,12 +58,13 @@ namespace Azure.Storage.Tests
             queueHelper.Destroy(); // Kill an existing queue if there is one
             queueHelper.Create(); // Create a fresh queue
             Boolean addResult = queueHelper.AddMessage(messageContext);
-            Boolean fetchResult = queueHelper.ProcessMessages(processor).Result;
+            QueueProcessResult result = queueHelper.ProcessMessages(processor).Result;
             Int32 endLength = queueHelper.Length;
 
             // ASSERT
             addResult.Should().BeTrue();
-            fetchResult.Should().BeTrue();
+            result.Success.Should().Be(1);
+            result.Fail.Should().Be(0);
             endLength.Should().Be(0);
         }
 
@@ -76,7 +77,7 @@ namespace Azure.Storage.Tests
             String messageContext = "This is a test";
             String connectionString = fixture.Configuration.StorageConnectionString;
             String queueName = "addmsgtest";
-            IQueueHelper<QueueMessage> queueHelper = new StorageQueueHelper(nullLogger, connectionString, queueName, new QueueMessageOptions { });
+            IQueueHelper<QueueMessage> queueHelper = new StorageQueueHelper(nullLogger, connectionString, queueName, new QueueMessageOptions { Delay = new TimeSpan(0, 0, 1), TTL = new TimeSpan(1, 0, 0) });
             Func<String, Int64, Boolean> processor = (String content, Int64 deliveryCount) =>
             {
                 return (deliveryCount > 1) && (content == messageContext);
@@ -86,11 +87,11 @@ namespace Azure.Storage.Tests
             queueHelper.Destroy(); // Kill an existing queue if there is one
             queueHelper.Create(); // Create a fresh queue
             Boolean addResult = queueHelper.AddMessage(messageContext);
-            Boolean fetchResult = false;
+            QueueProcessResult result = null;
             DateTime start = DateTime.UtcNow;
-            while (!fetchResult)
+            while (result == null || (result.Success == 0))
             {
-                fetchResult = queueHelper.ProcessMessages(processor).Result;
+                result = queueHelper.ProcessMessages(processor).Result;
             }
             DateTime finished = DateTime.UtcNow;
 
@@ -98,7 +99,8 @@ namespace Azure.Storage.Tests
 
             // ASSERT
             addResult.Should().BeTrue();
-            fetchResult.Should().BeTrue();
+            result.Success.Should().Be(1);
+            result.Fail.Should().Be(0);
             endLength.Should().Be(0);
         }
     }
