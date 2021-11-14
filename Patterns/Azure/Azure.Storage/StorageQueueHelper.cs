@@ -2,7 +2,7 @@
 using System.Text;
 using System.Threading.Tasks;
 using Azure.Common.Helpers;
-using Azure.Storage.Queues; 
+using Azure.Storage.Queues;
 using Azure.Storage.Queues.Models;
 using Microsoft.Extensions.Logging;
 using Microsoft.WindowsAzure.Storage.Queue;
@@ -23,8 +23,9 @@ namespace Azure.Storage
         private readonly QueueMessageOptions _Options;
 
         public Boolean IsAvailable
-        { 
-            get {
+        {
+            get
+            {
                 try
                 {
                     return _QueueClient.Exists();
@@ -36,31 +37,31 @@ namespace Azure.Storage
             }
         }
 
-        public Int32 Length 
+        public Int32 Length
         {
-            get { 
+            get
+            {
                 try
                 {
                     QueueProperties properties = _QueueClient.GetProperties();
                     return properties.ApproximateMessagesCount;
                 }
-                catch 
+                catch
                 {
                     return 0;
                 }
-            } 
+            }
         }
 
         public StorageQueueHelper(ILogger logger, String connectionString, String queueName, QueueMessageOptions options)
         {
             _Logger = logger;
-            _QueueClient = new QueueClient(connectionString, queueName);
             _Options = options ?? new QueueMessageOptions()
-                {
-                    TTL = null,
-                    Delay = null
-                };
-
+            {
+                TTL = null,
+                Delay = null
+            };
+            _QueueClient = new QueueClient(connectionString, queueName);
         }
 
         public Boolean Create()
@@ -69,7 +70,7 @@ namespace Azure.Storage
             {
                 _QueueClient.CreateIfNotExists();
             }
-            catch 
+            catch
             {
                 return false;
             }
@@ -104,7 +105,7 @@ namespace Azure.Storage
                     _Logger.LogInformation($"Added message to queue - {_QueueClient.Name}");
                     return true;
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     _Logger.LogError($"Failed to add message to queue - {_QueueClient.Name}", ex);
                 }
@@ -113,18 +114,19 @@ namespace Azure.Storage
             return false;
         }
 
-        public async Task<QueueProcessResult> ProcessMessages(Func<String, Int64, Boolean> processor)
+        public async Task<QueueProcessResult> ProcessMessages(Func<String, Int64, MessageProcessResult> processor)
         {
             QueueProcessResult result = new QueueProcessResult();
             if (IsAvailable)
             {
                 try
                 {
-                    QueueMessage[] messages = await _QueueClient.ReceiveMessagesAsync();
+                    QueueMessage[] messages = await _QueueClient.ReceiveMessagesAsync(visibilityTimeout: _Options.Delay);
                     foreach (QueueMessage message in messages)
                     {
                         String content = message.BodyAsString();
-                        if (processor(content, message.DequeueCount))
+                        MessageProcessResult processResult = processor(content, message.DequeueCount);
+                        if (processResult.Success)
                         {
                             // Delete the processed message to avoid the lease expiring and it being visible again to another process
                             await _QueueClient.DeleteMessageAsync(message.MessageId, message.PopReceipt);
@@ -133,6 +135,12 @@ namespace Azure.Storage
                         else
                         {
                             result.Fail++;
+
+                            // Has the processor logic overridden the message delay with something non-default?
+                            if (processResult.Delay.HasValue)
+                            {
+                                _QueueClient.UpdateMessage(message.MessageId, message.PopReceipt, visibilityTimeout : processResult.Delay.Value);
+                            }
                         }
                     }
                 }

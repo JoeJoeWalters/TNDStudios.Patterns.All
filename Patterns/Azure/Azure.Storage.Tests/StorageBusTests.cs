@@ -49,10 +49,13 @@ namespace Azure.Storage.Tests
             String connectionString = fixture.Configuration.StorageConnectionString;
             String queueName = "addmsgtest";
             IQueueHelper<QueueMessage> queueHelper = new StorageQueueHelper(nullLogger, connectionString, queueName, new QueueMessageOptions { });
-            Func<String, Int64,  Boolean> processor = (String content, Int64 deliveryCount) => 
-                                                        { 
-                                                            return content == messageContext; 
-                                                        };
+            Func<String, Int64, MessageProcessResult> processor = (String content, Int64 deliveryCount) =>
+                                                       {
+                                                           return new MessageProcessResult()
+                                                           {
+                                                               Success = (content == messageContext)
+                                                           };
+                                                       };
 
             // ACT
             queueHelper.Destroy(); // Kill an existing queue if there is one
@@ -77,10 +80,13 @@ namespace Azure.Storage.Tests
             String messageContext = "This is a test";
             String connectionString = fixture.Configuration.StorageConnectionString;
             String queueName = "addmsgtest";
-            IQueueHelper<QueueMessage> queueHelper = new StorageQueueHelper(nullLogger, connectionString, queueName, new QueueMessageOptions { Delay = new TimeSpan(0, 0, 1), TTL = new TimeSpan(1, 0, 0) });
-            Func<String, Int64, Boolean> processor = (String content, Int64 deliveryCount) =>
+            IQueueHelper<QueueMessage> queueHelper = new StorageQueueHelper(nullLogger, connectionString, queueName, new QueueMessageOptions { Delay = new TimeSpan(0, 0, secondsRequeueDelay) });
+            Func<String, Int64, MessageProcessResult> processor = (String content, Int64 deliveryCount) =>
             {
-                return (deliveryCount > 1) && (content == messageContext);
+                return new MessageProcessResult()
+                {
+                    Success = (deliveryCount > 1) && (content == messageContext)
+                };
             };
 
             // ACT
