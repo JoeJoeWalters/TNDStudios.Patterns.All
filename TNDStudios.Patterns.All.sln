@@ -29,7 +29,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Azure.Storage.Tests", "Patt
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Azure.Common", "Patterns\Azure\Azure.Common\Azure.Common.csproj", "{29535F64-7873-40CB-ABAF-107AF9937586}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestHelpers", "Patterns\Helpers\TestHelpers\TestHelpers.csproj", "{27B5DDBA-B7BC-4117-ACD6-2EA2AB86E962}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestHelpers", "Patterns\Helpers\TestHelpers\TestHelpers.csproj", "{27B5DDBA-B7BC-4117-ACD6-2EA2AB86E962}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
