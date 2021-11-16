@@ -6,4 +6,8 @@
     <RootNamespace>TNDStudios.ContextHelpers</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="ncrontab" Version="3.3.1" />
+  </ItemGroup>
+
 </Project>
