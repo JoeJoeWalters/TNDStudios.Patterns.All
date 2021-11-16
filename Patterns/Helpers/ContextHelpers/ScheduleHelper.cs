@@ -19,7 +19,7 @@ namespace TNDStudios.ContextHelpers
             return schedule.GetNextOccurrence(DateTime.Now);
         }
 
-        public IEnumerable<DateTime> GetNextX(DateTime end)
+        public IEnumerable<DateTime> GetNext(DateTime end)
         {
             var schedule = CrontabSchedule.Parse(_cron);
             return schedule.GetNextOccurrences(DateTime.Now, end);
