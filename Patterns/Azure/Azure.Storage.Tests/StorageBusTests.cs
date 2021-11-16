@@ -80,7 +80,9 @@ namespace Azure.Storage.Tests
             String messageContext = "This is a test";
             String connectionString = fixture.Configuration.StorageConnectionString;
             String queueName = "addmsgtest";
-            IQueueHelper<QueueMessage> queueHelper = new StorageQueueHelper(nullLogger, connectionString, queueName, new QueueMessageOptions { Delay = new TimeSpan(0, 0, secondsRequeueDelay) });
+            TimeSpan delayLower = new TimeSpan(0, 0, secondsRequeueDelay);
+            TimeSpan delayUpper = new TimeSpan(0, 0, secondsRequeueDelay * 2);
+            IQueueHelper<QueueMessage> queueHelper = new StorageQueueHelper(nullLogger, connectionString, queueName, new QueueMessageOptions { Delay = delayLower });
             Func<String, Int64, MessageProcessResult> processor = (String content, Int64 deliveryCount) =>
             {
                 return new MessageProcessResult()
@@ -100,6 +102,7 @@ namespace Azure.Storage.Tests
                 result = queueHelper.ProcessMessages(processor).Result;
             }
             DateTime finished = DateTime.UtcNow;
+            TimeSpan processingTime = finished - start;
 
             Int32 endLength = queueHelper.Length;
 
@@ -108,6 +111,8 @@ namespace Azure.Storage.Tests
             result.Success.Should().Be(1);
             result.Fail.Should().Be(0);
             endLength.Should().Be(0);
+            processingTime.Should().BeGreaterThanOrEqualTo(delayLower);
+            processingTime.Should().BeLessThanOrEqualTo(delayUpper);
         }
     }
 }

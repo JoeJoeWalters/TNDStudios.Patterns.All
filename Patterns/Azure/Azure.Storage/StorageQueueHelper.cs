@@ -58,7 +58,6 @@ namespace Azure.Storage
             _Logger = logger;
             _Options = options ?? new QueueMessageOptions()
             {
-                TTL = null,
                 Delay = null
             };
             _QueueClient = new QueueClient(connectionString, queueName);
@@ -101,7 +100,7 @@ namespace Azure.Storage
             {
                 try
                 {
-                    _QueueClient.SendMessage(message, _Options.Delay, _Options.TTL);
+                    _QueueClient.SendMessage(message);
                     _Logger.LogInformation($"Added message to queue - {_QueueClient.Name}");
                     return true;
                 }
