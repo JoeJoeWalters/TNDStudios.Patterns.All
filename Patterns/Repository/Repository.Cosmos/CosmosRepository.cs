@@ -89,6 +89,13 @@ namespace Repository
             return documents.Select(document => ToDomain(document)).ToList<TDomain>();
         }
 
+        public override async Task<bool> Insert(TDomain item)
+        {
+            TDocument document = ToDocument(item);
+            await _container.CreateItemAsync<TDocument>(document, new PartitionKey(document.PartitionKey));
+            return true;
+        }
+
         public override async Task<bool> Upsert(TDomain item)
         {
             TDocument document = ToDocument(item);

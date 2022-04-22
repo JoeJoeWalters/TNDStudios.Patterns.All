@@ -31,6 +31,8 @@ namespace Repository.Common
         public TDocument ToDocument(TDomain domain)
             => _toDocument(domain);
 
+        public virtual async Task<bool> Insert(TDomain item) => throw new NotImplementedException();
+
         public virtual async Task<bool> Upsert(TDomain item) => throw new NotImplementedException();
 
         public virtual async Task<bool> WithData(List<TDomain> data) => throw new NotImplementedException();

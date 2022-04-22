@@ -31,8 +31,8 @@ namespace Repository.Common
         Task<TDomain> Get(String id, String partitionKey);
         Task<IEnumerable<TDomain>> Query(Expression<Func<TDocument, Boolean>> query, string partitionKey);
         Task<Boolean> Delete(String id, String partitionKey);
+        Task<Boolean> Insert(TDomain item);
         Task<Boolean> Upsert(TDomain item);
-
         Task<Boolean> WithData(List<TDomain> data);
     }
 }

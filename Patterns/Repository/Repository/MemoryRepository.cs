@@ -38,6 +38,9 @@ namespace Repository.Common
             return filtered.Select(x => ToDomain(x)).ToList();
         }
 
+        public override async Task<bool> Insert(TDomain item)
+            => await Upsert(item);
+
         public override async Task<bool> Upsert(TDomain item)
         {
             TDocument document = ToDocument(item);
