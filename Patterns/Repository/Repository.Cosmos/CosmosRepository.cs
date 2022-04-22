@@ -6,6 +6,8 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Net;
 using System.Threading.Tasks;
+using Polly;
+using System.Net.Http;
 
 namespace Repository
 {
@@ -62,7 +64,7 @@ namespace Repository
             {
                 document = await _container.ReadItemAsync<TDocument>(id, new PartitionKey(partitionKey));
             }
-            catch(CosmosException cosEx) when (cosEx.StatusCode == HttpStatusCode.NotFound)
+            catch (CosmosException cosEx) when (cosEx.StatusCode == HttpStatusCode.NotFound)
             {
 
             }
@@ -107,7 +109,7 @@ namespace Repository
         {
             bool result = true;
 
-            foreach(TDomain domain in data)
+            foreach (TDomain domain in data)
             {
                 bool upsertResult = await Upsert(domain);
                 result = !upsertResult ? false : result;
@@ -115,5 +117,6 @@ namespace Repository
 
             return result;
         }
+
     }
 }
